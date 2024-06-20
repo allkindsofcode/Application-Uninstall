@@ -1,0 +1,56 @@
+function uninstall{
+
+# Version 1.5
+#Contributors:
+# brandon.sutton
+# randall.drennen
+$type=read-host -Prompt "Is this running on a remote system? (Y/N)"
+
+
+IF ($type -eq "y"){
+
+$p= read-host -Prompt "What is your admin password?" -AsSecureString
+cls
+
+$pc=read-host -Prompt "What is the computers name?"
+
+ping $pc
+$name=read-host -Prompt "what is the computer's IP?"
+
+wmic /node:"$name" product get name
+$app=read-host -Prompt "which app would you like to remove?" 
+
+wmic /node:"$name" /user:$env:USERNAME /password:$p product where name=`"$app`" call uninstall
+Y
+count
+}
+else
+{
+
+wmic product get name
+$app=read-host -Prompt "which app would you like to remove?"
+
+wmic product where name=`"$app`" call uninstall
+
+count
+}
+}
+
+function count{
+$ct=read-host -Prompt "Are you uninstalling more than 1 application? (Y/N)"
+
+IF ($ct -eq "n"){
+et
+}
+else
+{
+uninstall
+}
+}
+
+function et{
+write-host "Goodbye"
+end
+}
+
+uninstall
